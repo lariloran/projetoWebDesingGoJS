@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/gojs/release/go-debug.js"></script>
+
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- The DIV for a Diagram needs an explicit size or else we will not see anything.
+     In this case we also add a background color so we can see that area. -->
+     <div id="myDiagramDiv"
+     style="width:1000px; height:500px; background-color: #DAE4E4;"></div>
+        
+    <script>
+        const myDiagram = new go.Diagram("myDiagramDiv",
+            {
+                "undoManager.isEnabled": true,
+                layout: new go.TreeLayout({ angle: 90, layerSpacing: 35 })
+            });
+
+        myDiagram.nodeTemplate =
+            new go.Node("Horizontal",
+                { background: "#44CCFF" })
+                .add(new go.Picture(
+                    { margin: 10, width: 50, height: 50, background: "red" })
+                    .bind("source"))
+                .add(new go.TextBlock("Default Text",
+                    { margin: 12, stroke: "white", font: "bold 16px sans-serif" })
+                    .bind("text", "name"));
+
+        // define a Link template that routes orthogonally, with no arrowhead
+        myDiagram.linkTemplate =
+            new go.Link(
+                // default routing is go.Link.Normal
+                // default corner is 0
+                { routing: go.Link.Orthogonal, corner: 5 })
+                // the link path, a Shape
+                .add(new go.Shape({ strokeWidth: 3, stroke: "#555" }))
+        // if we wanted an arrowhead we would also add another Shape with toArrow defined:
+        //.add(new go.Shape({  toArrow: "Standard", stroke: null  }))
+
+        // it's best to declare all templates before assigning the model
+        myDiagram.model = new go.TreeModel(
+            [
+                { key: "1", name: "Don Meow", source: "img/cat1.jpg" },
+                { key: "2", parent: "1", name: "Demeter", source: "img/cat2.jpg" },
+                { key: "3", parent: "1", name: "Copricat", source: "img/cat3.png" },
+                { key: "4", parent: "3", name: "Jellylorum", source: "img/cat4.jpg" },
+                { key: "5", parent: "3", name: "Alonzo", source: "img/cat5.jpg" },
+                { key: "6", parent: "2", name: "Munkustrap", source: "img/cat6.jpg" }
+            ]);
+    </script>
+</body>
+
+</html>
